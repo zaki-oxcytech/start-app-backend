@@ -26,9 +26,14 @@ exports.formDetails = [
     .withMessage("team leader name must be at least 4 characters long")
     .escape(),
   body("teamMember")
+    .isArray({ min: 1 })
+    .withMessage("teamMember must be a non-empty array"),
+  body("teamMember.*")
+    .isString()
+    .withMessage("Each team member must be a string")
     .trim()
     .isLength({ min: 4 })
-    .withMessage("team member name must be at least 4 characters long")
+    .withMessage("Each team member name must be at least 4 characters long")
     .escape(),
   body("size")
     .trim()
