@@ -11,6 +11,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // url      = "postgres://default:QWG6Btb4XKTc@ep-muddy-recipe-a4dnori7-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require&pgbouncer=true&connect_timeout=15"
 }
 
 model User {
@@ -36,5 +37,13 @@ model Detail {
   name        String
   email       String
   serviceType String
+  projectName String
+  teamLeader  String
+  teamMember  String
+  cost        Int
+  size        String
+  priority    String
+  projectType String
+  details     String
   date        DateTime
 }

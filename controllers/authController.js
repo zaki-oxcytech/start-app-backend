@@ -1,25 +1,22 @@
-const bcrypt = require('bcryptjs');
-const { body, validationResult } = require('express-validator');
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
-const jwt = require('jsonwebtoken')
-const { PrismaClient } = require('@prisma/client');
+const bcrypt = require("bcryptjs");
+const { body, validationResult } = require("express-validator");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 exports.register = [
   // Validation and sanitization
-  body('username')
+  body("username")
     .trim()
     .isLength({ min: 3 })
-    .withMessage('Username must be at least 3 characters long')
+    .withMessage("Username must be at least 3 characters long")
     .escape(),
-  body('email')
-    .isEmail()
-    .withMessage('Invalid email address')
-    .normalizeEmail(),
-  body('password')
+  body("email").isEmail().withMessage("Invalid email address").normalizeEmail(),
+  body("password")
     .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters long'),
+    .withMessage("Password must be at least 8 characters long"),
 
   async (req, res) => {
     // Check for validation errors
@@ -61,7 +58,7 @@ exports.register = [
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: process.env.SMTP_PORT,
-        secure: process.env.SMTP_PORT === '465', // Set to true if using port 465
+        secure: process.env.SMTP_PORT === "465", // Set to true if using port 465
         auth: {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
@@ -83,28 +80,30 @@ exports.register = [
       try {
         await transporter.sendMail(mailOptions);
       } catch (mailError) {
-        console.error('Error sending email:', mailError);
-        return res.status(500).json({ message: "Failed to send verification email" });
+        console.error("Error sending email:", mailError);
+        return res
+          .status(500)
+          .json({ message: "Failed to send verification email" });
       }
 
       res.status(201).json({ message: "Verification OTP sent successfully" });
     } catch (error) {
-      console.error('Error during registration:', error);
+      console.error("Error during registration:", error);
       res.status(500).json({ message: "Internal server error" });
     } finally {
       await prisma.$disconnect();
     }
-  }
+  },
 ];
 
 exports.verifyEmail = [
   // Validation for OTP
-  body('otp')
+  body("otp")
     .trim()
     .isLength({ min: 6, max: 6 })
-    .withMessage('OTP must be a 6-digit number')
+    .withMessage("OTP must be a 6-digit number")
     .isNumeric()
-    .withMessage('OTP must be numeric'),
+    .withMessage("OTP must be numeric"),
 
   async (req, res) => {
     // Check for validation errors
@@ -114,7 +113,6 @@ exports.verifyEmail = [
     }
 
     const { otp } = req.body;
-    
 
     try {
       // Find the user with the matching OTP and update the user status
@@ -129,22 +127,19 @@ exports.verifyEmail = [
 
       res.status(200).json({ message: "User verified successfully!" });
     } catch (err) {
-      console.error('Error during email verification:', err);
+      console.error("Error during email verification:", err);
       res.status(500).json({ message: "Internal server error" });
     } finally {
       await prisma.$disconnect();
     }
-  }
+  },
 ];
 exports.login = [
   // Validation for email and password
-  body('email')
-    .isEmail()
-    .withMessage('Invalid email address')
-    .normalizeEmail(),
-  body('password')
+  body("email").isEmail().withMessage("Invalid email address").normalizeEmail(),
+  body("password")
     .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters long'),
+    .withMessage("Password must be at least 8 characters long"),
 
   async (req, res) => {
     // Check for validation errors
@@ -184,20 +179,17 @@ exports.login = [
 
       res.status(200).json({ token });
     } catch (error) {
-      console.error('Error during login:', error);
+      console.error("Error during login:", error);
       res.status(500).json({ message: "Internal server error" });
     } finally {
       await prisma.$disconnect();
     }
-  }
+  },
 ];
 
 exports.forgotPassword = [
   // Validation for email
-  body('email')
-    .isEmail()
-    .withMessage('Invalid email address')
-    .normalizeEmail(),
+  body("email").isEmail().withMessage("Invalid email address").normalizeEmail(),
 
   async (req, res) => {
     // Check for validation errors
@@ -224,14 +216,14 @@ exports.forgotPassword = [
       // Update user with OTP (consider adding an expiry time for the OTP)
       await prisma.user.update({
         where: { email },
-        data: { resetotp: otp
-    }});
+        data: { resetotp: otp },
+      });
 
       // Set up the transporter
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: process.env.SMTP_PORT,
-        secure: process.env.SMTP_PORT === '465', // Use true if using port 465
+        secure: process.env.SMTP_PORT === "465", // Use true if using port 465
         auth: {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
@@ -255,35 +247,32 @@ exports.forgotPassword = [
 
       res.status(200).json({ message: "Reset email sent successfully!" });
     } catch (error) {
-      console.error('Error during password reset:', error);
+      console.error("Error during password reset:", error);
       res.status(500).json({ error: "Internal server error" });
     } finally {
       await prisma.$disconnect();
     }
-  }
+  },
 ];
 
 exports.resetPassword = [
- 
-
-  body('otp')
+  body("otp")
     .trim()
     .isLength({ min: 6, max: 6 })
-    .withMessage('OTP must be a 6-digit number')
+    .withMessage("OTP must be a 6-digit number")
     .isNumeric()
-    .withMessage('OTP must be numeric'),
-  body('newPassword')
+    .withMessage("OTP must be numeric"),
+  body("newPassword")
     .isLength({ min: 8 })
-    .withMessage('New password must be at least 8 characters long'),
+    .withMessage("New password must be at least 8 characters long"),
 
   async (req, res) => {
-    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const {  otp, newPassword } = req.body;
+    const { otp, newPassword } = req.body;
 
     try {
       // Find user by email and OTP
@@ -294,7 +283,9 @@ exports.resetPassword = [
       });
 
       if (!user) {
-        return res.status(400).json({ error: "Invalid email, OTP, or OTP has expired" });
+        return res
+          .status(400)
+          .json({ error: "Invalid email, OTP, or OTP has expired" });
       }
 
       // Hash new password
@@ -311,12 +302,12 @@ exports.resetPassword = [
 
       res.status(200).json({ message: "Password reset successfully!" });
     } catch (error) {
-      console.error('Error during password reset:', error);
+      console.error("Error during password reset:", error);
       res.status(500).json({ error: "Internal server error" });
     } finally {
       await prisma.$disconnect();
     }
-  }
+  },
 ];
 exports.getAllUsers = async (req, res) => {
   try {

@@ -1,20 +1,21 @@
 const express = require("express");
 const cors = require("cors");
-const helmet = require('helmet');
+const helmet = require("helmet");
 const authRoutes = require("../routes/auth");
-const formRoutes = require('../routes/form') 
+const formRoutes = require("../routes/form");
+const bodyParser = require("body-parser");
 require("dotenv").config();
-
 const app = express();
 
+app.use(bodyParser.json());
 // Middleware
-app.use(express.json()); 
+app.use(express.json());
 // app.use(cors());
 app.use(helmet());
 
 // Routes
 app.use("/auth", authRoutes);
-app.use("/form", formRoutes); 
+app.use("/form", formRoutes);
 
 app.get("/", (req, res) => {
   res.send("Working");
