@@ -39,7 +39,7 @@ model Detail {
   serviceType String
   projectName String
   teamLeader  String
-  teamMember  String
+  teamMember  String[]
   cost        Int
   size        String
   priority    String
