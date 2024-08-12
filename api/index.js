@@ -1,5 +1,5 @@
 const express = require("express");
-const cors = require("cors");
+// const cors = require("cors");
 const helmet = require("helmet");
 const authRoutes = require("../routes/auth");
 const formRoutes = require("../routes/form");
@@ -11,28 +11,28 @@ app.use(bodyParser.json());
 // Middleware
 app.use(express.json());
 
-const allowedOrigin = [
-  "https://starter-app-frontend-hu3hv2hi2-zaki-oxcytechs-projects.vercel.app/",
-  "https://starter-app-frontend.vercel.app/",
-];
+// const allowedOrigin = [
+//   "https://starter-app-frontend-hu3hv2hi2-zaki-oxcytechs-projects.vercel.app/",
+//   "https://starter-app-frontend.vercel.app/",
+// ];
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    // console.log("Origin: ", allowedOrigin.indexOf(origin));
-    if (allowedOrigin.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS Error"));
-    }
-  },
-  methods: "GET,PATCH,POST,PUT,DELETE",
-};
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     // console.log("Origin: ", allowedOrigin.indexOf(origin));
+//     if (allowedOrigin.indexOf(origin) !== -1 || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("CORS Error"));
+//     }
+//   },
+//   methods: "GET,PATCH,POST,PUT,DELETE",
+// };
 // app.use(cors(corsOptions));
 app.use(helmet());
 
 // Routes
 app.use("/auth", authRoutes);
-app.use("/form", cors(corsOptions), formRoutes);
+app.use("/form", formRoutes);
 
 app.get("/", (req, res) => {
   res.send("Working");
