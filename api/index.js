@@ -27,12 +27,12 @@ const corsOptions = {
   },
   methods: "GET,PATCH,POST,PUT,DELETE",
 };
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(helmet());
 
 // Routes
 app.use("/auth", authRoutes);
-app.use("/form", formRoutes);
+app.use("/form", cors(corsOptions), formRoutes);
 
 app.get("/", (req, res) => {
   res.send("Working");
