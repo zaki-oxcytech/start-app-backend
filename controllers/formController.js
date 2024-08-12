@@ -86,9 +86,18 @@ exports.formDetails = [
         email,
         serviceType,
         date,
+        projectName,
+        teamLeader,
+        teamMember,
+        cost,
+        size,
+        priority,
+        projectType,
+        details,
         error,
       });
       res.status(500).json({ error: "Internal Server Error" });
+      // res.status(500).json(error.message);
     }
   },
 ];
@@ -97,6 +106,40 @@ exports.getAllData = async (req, res) => {
   try {
     const allUsers = await prisma.detail.findMany();
     res.status(200).json(allUsers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+exports.editFormData = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    const updatedRecord = await prisma.detail.update({
+      where: { id: parseInt(id) },
+      data: updateData,
+    });
+
+    res.status(200).json(updatedRecord);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+exports.deleteItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteItem = await prisma.detail.delete({
+      where: { id: parseInt(id) },
+    });
+    res.status(200).json({ message: "item Deleted successfully!", itemId: id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: error.message });
