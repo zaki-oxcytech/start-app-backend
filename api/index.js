@@ -1,5 +1,5 @@
 const express = require("express");
-// const cors = require("cors");
+const cors = require("cors");
 const helmet = require("helmet");
 const authRoutes = require("../routes/auth");
 const formRoutes = require("../routes/form");
@@ -28,6 +28,16 @@ app.use(express.json());
 //   methods: "GET,PATCH,POST,PUT,DELETE",
 // };
 // app.use(cors(corsOptions));
+
+app.use(
+  cors({
+    origin:
+      "https://starter-app-frontend-hu3hv2hi2-zaki-oxcytechs-projects.vercel.app",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
+  })
+);
+
 app.use(helmet());
 
 // Routes
