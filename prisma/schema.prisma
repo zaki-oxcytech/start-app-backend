@@ -10,8 +10,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
-  url      = "postgres://default:QWG6Btb4XKTc@ep-muddy-recipe-a4dnori7-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require&pgbouncer=true&connect_timeout=15"
+  url      = env("DATABASE_URL")
+  //url      = "postgres://default:QWG6Btb4XKTc@ep-muddy-recipe-a4dnori7-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require&pgbouncer=true&connect_timeout=15"
 }
 
 model User {
@@ -24,6 +24,8 @@ model User {
   verifyotp        String?
   company_existing String?
   companies        Company[]
+  type             String? 
+  supporter_status String? 
 }
 
 model Company {
@@ -46,4 +48,30 @@ model Detail {
   projectType String
   details     String
   date        DateTime
+}
+
+model Support_chat {
+  sc_id      		    Int       @id @default(autoincrement())       
+  user_id   	    	Int
+  sc_status         String
+  sc_created_date   DateTime    
+}
+
+
+model Support_chat_members {
+  scm_id      				    Int       @id @default(autoincrement())
+  sc_id   		    		    Int      
+  user_id   	    		    Int
+  scm_created_date			  DateTime
+}
+
+
+model Support_chat_message {
+  scmsg_id      			Int       @id @default(autoincrement())
+  scm_id   		    		Int      
+  sc_id   	    			Int       
+  user_id   	    		Int
+  msg      					  String  
+  msg_date					  DateTime
+  custom_msg          String?
 }

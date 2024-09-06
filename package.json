@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon api/index.js",
     "start": "nodemon api/index.js",
     "postinstall": "prisma generate",
     "test": "jest"
@@ -26,7 +27,9 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.13",
     "nodemon": "^3.1.0",
-    "rotating-file-stream": "^3.2.1"
+    "rotating-file-stream": "^3.2.1",
+    "socket.io": "^4.7.5",
+    "update": "^0.7.4"
   },
   "devDependencies": {
     "jest": "^29.7.0",

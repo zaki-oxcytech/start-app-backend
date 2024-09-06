@@ -51,42 +51,45 @@ exports.register = [
           verified: "N",
           verifyotp: otp,
           company_existing: "N",
+          type: "",
+          supporter_status: ""
         },
       });
 
       // Configure nodemailer transporter
-      const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        secure: process.env.SMTP_PORT === "465", // Set to true if using port 465
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-        tls: {
-          rejectUnauthorized: false, // Ignore self-signed certificates
-        },
-      });
+      // const transporter = nodemailer.createTransport({
+      //   host: process.env.SMTP_HOST,
+      //   port: process.env.SMTP_PORT,
+      //   secure: process.env.SMTP_PORT === "465", // Set to true if using port 465
+      //   auth: {
+      //     user: process.env.SMTP_USER,
+      //     pass: process.env.SMTP_PASS,
+      //   },
+      //   tls: {
+      //     rejectUnauthorized: false, // Ignore self-signed certificates
+      //   },
+      // });
 
       // Construct email options
-      const mailOptions = {
-        from: process.env.SMTP_USER,
-        to: email,
-        subject: "Verify Your Email Address",
-        html: `<p>Use this OTP: <strong>${otp}</strong> to verify your email. <a href="http://${req.headers.host}/verify-email?otp=${otp}">Click here</a> to verify your email.</p>`,
-      };
+      // const mailOptions = {
+      //   from: process.env.SMTP_USER,
+      //   to: email,
+      //   subject: "Verify Your Email Address",
+      //   html: `<p>Use this OTP: <strong>${otp}</strong> to verify your email. <a href="http://${req.headers.host}/verify-email?otp=${otp}">Click here</a> to verify your email.</p>`,
+      // };
 
       // Send email
-      try {
-        await transporter.sendMail(mailOptions);
-      } catch (mailError) {
-        console.error("Error sending email:", mailError);
-        return res
-          .status(500)
-          .json({ message: "Failed to send verification email" });
-      }
+      // try {
+      //   await transporter.sendMail(mailOptions);
+      // } catch (mailError) {
+      //   console.error("Error sending email:", mailError);
+      //   return res
+      //     .status(500)
+      //     .json({ message: "Failed to send verification email" });
+      // }
+      // res.status(201).json({ message: "Verification OTP sent successfully" });
 
-      res.status(201).json({ message: "Verification OTP sent successfully" });
+      res.status(201).json({ message: "register successfully" });
     } catch (error) {
       console.error("Error during registration:", error);
       res.status(500).json({ message: "Internal server error" });

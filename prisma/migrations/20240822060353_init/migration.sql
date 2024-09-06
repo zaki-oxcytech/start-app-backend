@@ -8,6 +8,7 @@ CREATE TABLE "User" (
     "verified" TEXT,
     "verifyotp" TEXT,
     "company_existing" TEXT,
+    "address" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -18,6 +19,25 @@ CREATE TABLE "Company" (
     "name" TEXT NOT NULL,
 
     CONSTRAINT "Company_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Detail" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "serviceType" TEXT NOT NULL,
+    "projectName" TEXT NOT NULL,
+    "teamLeader" TEXT NOT NULL,
+    "teamMember" TEXT[],
+    "cost" INTEGER NOT NULL,
+    "size" TEXT NOT NULL,
+    "priority" TEXT NOT NULL,
+    "projectType" TEXT NOT NULL,
+    "details" TEXT NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Detail_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
